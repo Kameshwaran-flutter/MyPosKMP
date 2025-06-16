@@ -1,0 +1,188 @@
+{
+  "menuList": [
+    {
+      "id": 1,
+      "title": "Classic Cheeseburger",
+      "price": 95,
+      "currencyString": "kr",
+      "menuCategory": "burger",
+      "description": "Juicy beef patty, cheddar cheese, lettuce, tomato, onion, pickles, and special sauce"
+    },
+    {
+      "id": 2,
+      "title": "BBQ Bacon Burger",
+      "price": 110,
+      "currencyString": "kr",
+      "menuCategory": "burger",
+      "description": "Beef patty, crispy bacon, smoked cheddar, grilled onions, and tangy BBQ sauce"
+    },
+    {
+      "id": 3,
+      "title": "Spicy Jalapeño Burger",
+      "price": 105,
+      "currencyString": "kr",
+      "menuCategory": "burger",
+      "description": "Beef patty, pepper jack cheese, fresh jalapeños, lettuce, tomato, and chipotle aioli"
+    },
+    {
+      "id": 4,
+      "title": "Veggie Burger",
+      "price": 90,
+      "currencyString": "kr",
+      "menuCategory": "burger",
+      "description": "Plant-based patty, vegan cheddar, avocado, lettuce, tomato, and vegan mayo"
+    },
+    {
+      "id": 5,
+      "title": "Double Smash Burger",
+      "price": 120,
+      "currencyString": "kr",
+      "menuCategory": "burger",
+      "description": "Two smashed beef patties, American cheese, caramelized onions, pickles, and secret sauce"
+    },
+    {
+      "id": 6,
+      "title": "Margherita",
+      "price": 80,
+      "currencyString": "kr",
+      "menuCategory": "pizza",
+      "description": "Fresh tomatoes, fresh mozzarella, fresh basil"
+    },
+    {
+      "id": 7,
+      "title": "Pepperoni Pizza",
+      "price": 90,
+      "currencyString": "kr",
+      "menuCategory": "pizza",
+      "description": "Classic tomato sauce, mozzarella, and spicy pepperoni slices"
+    },
+    {
+      "id": 8,
+      "title": "BBQ Chicken Pizza",
+      "price": 100,
+      "currencyString": "kr",
+      "menuCategory": "pizza",
+      "description": "Grilled chicken, smoky BBQ sauce, red onions, and cilantro on a crispy crust"
+    },
+    {
+      "id": 9,
+      "title": "Veggie Supreme",
+      "price": 95,
+      "currencyString": "kr",
+      "menuCategory": "pizza",
+      "description": "Bell peppers, mushrooms, red onions, black olives, mozzarella, and tomato sauce"
+    },
+    {
+      "id": 10,
+      "title": "Four Cheese Pizza",
+      "price": 110,
+      "currencyString": "kr",
+      "menuCategory": "pizza",
+      "description": "Mozzarella, parmesan, gorgonzola, and provolone on a rich tomato base"
+    },
+    {
+      "id": 11,
+      "title": "Caesar Salad",
+      "price": 75,
+      "currencyString": "kr",
+      "menuCategory": "salad",
+      "description": "Crisp romaine, parmesan cheese, garlic croutons, and creamy Caesar dressing"
+    },
+    {
+      "id": 12,
+      "title": "Greek Salad",
+      "price": 80,
+      "currencyString": "kr",
+      "menuCategory": "salad",
+      "description": "Feta cheese, tomatoes, cucumbers, olives, red onions, and oregano dressing"
+    },
+    {
+      "id": 13,
+      "title": "Caprese Salad",
+      "price": 85,
+      "currencyString": "kr",
+      "menuCategory": "salad",
+      "description": "Fresh mozzarella, tomatoes, basil, balsamic glaze, and olive oil"
+    },
+    {
+      "id": 14,
+      "title": "Grilled Chicken Salad",
+      "price": 95,
+      "currencyString": "kr",
+      "menuCategory": "salad",
+      "description": "Grilled chicken, mixed greens, cherry tomatoes, avocado, and honey mustard dressing"
+    },
+    {
+      "id": 15,
+      "title": "Classic Club Sandwich",
+      "price": 85,
+      "currencyString": "kr",
+      "menuCategory": "sandwich",
+      "description": "Turkey, crispy bacon, lettuce, tomato, cheddar cheese, and mayo on toasted bread"
+    },
+    {
+      "id": 16,
+      "title": "Caprese Sandwich",
+      "price": 80,
+      "currencyString": "kr",
+      "menuCategory": "sandwich",
+      "description": "Fresh mozzarella, tomatoes, basil, balsamic glaze, and olive oil on ciabatta"
+    },
+    {
+      "id": 17,
+      "title": "Kids Mini Cheeseburger",
+      "price": 60,
+      "currencyString": "kr",
+      "menuCategory": "kidsmenu",
+      "description": "Small beef patty, mild cheddar cheese, and soft bun, served with fries"
+    },
+    {
+      "id": 18,
+      "title": "Kids Margherita Pizza",
+      "price": 65,
+      "currencyString": "kr",
+      "menuCategory": "kidsmenu",
+      "description": "Mini Margherita pizza with fresh mozzarella, tomato sauce, and basil"
+    },
+    {
+      "id": 19,
+      "title": "Kids Chicken Nuggets",
+      "price": 55,
+      "currencyString": "kr",
+      "menuCategory": "kidsmenu",
+      "description": "Crispy chicken nuggets served with a side of fries and mild dipping sauce"
+    },
+    {
+      "id": 20,
+      "title": "Classic Lemonade",
+      "price": 40,
+      "currencyString": "kr",
+      "menuCategory": "drinks",
+      "description": "Refreshing homemade lemonade with fresh lemons and a hint of mint"
+    },
+    {
+      "id": 21,
+      "title": "Iced Coffee",
+      "price": 45,
+      "currencyString": "kr",
+      "menuCategory": "drinks",
+      "description": "Cold brew coffee served over ice, with optional milk or syrup"
+    },
+    {
+      "id": 22,
+      "title": "Berry Smoothie",
+      "price": 50,
+      "currencyString": "kr",
+      "menuCategory": "drinks",
+      "description": "A delicious blend of strawberries, blueberries, bananas, and yogurt"
+    },
+    {
+      "id": 23,
+      "title": "Sparkling Water",
+      "price": 30,
+      "currencyString": "kr",
+      "menuCategory": "drinks",
+      "description": "Chilled sparkling water with a slice of lemon or lime"
+    }
+  ]
+}

@@ -2,7 +2,6 @@ package com.kameshflutter.myposkmp.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,18 +18,24 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.outlined.Cookie
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.DinnerDining
 import androidx.compose.material.icons.outlined.Fastfood
 import androidx.compose.material.icons.outlined.LocalDrink
 import androidx.compose.material.icons.outlined.LocalPizza
 import androidx.compose.material.icons.outlined.LunchDining
+import androidx.compose.material.icons.outlined.Payment
+import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -43,14 +48,16 @@ import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
@@ -58,6 +65,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kameshflutter.myposkmp.model.Menu
@@ -91,6 +99,9 @@ fun MenuCategoryNavigation(menuList: MenuList) {
     var menuItemsList = emptyList<Menu>()
     val menuItemHasMap = menuViewModel.menuCategoryMap(menuList)
     if(menuItemHasMap.isNotEmpty()) {
+        LaunchedEffect(Unit){
+            menuViewModel.changeSelectedCategoryValue(MenuCategory.valueOf(menuItemHasMap.keys.first()))
+        }
         menuItemsList = menuItemHasMap[selectedCategory.name] as List<Menu>
     }
     var showCartContent by remember { mutableStateOf(false) }
@@ -116,7 +127,7 @@ fun MenuCategoryNavigation(menuList: MenuList) {
                                     defaultElevation = 6.dp
                                 ),
                                 modifier = Modifier
-                                    .size(width = 150.dp, height = 120.dp),
+                                    .size(width = 160.dp, height = 120.dp),
                                 colors = CardColors(
                                     containerColor = Color.White,
                                     contentColor = Color.Black,
@@ -138,7 +149,8 @@ fun MenuCategoryNavigation(menuList: MenuList) {
                                         painterResource(enumImageMenuDrawable(it.menuCategory)),
                                         null,
                                         alignment = Alignment.Center,
-                                        modifier = Modifier.size(40.dp, 120.dp),
+                                        modifier = Modifier.size(50.dp, 120.dp).clip(
+                                            RoundedCornerShape(10.dp)),
                                         contentScale = ContentScale.FillHeight
                                     )
                                     Column(
@@ -192,6 +204,7 @@ fun MenuCategoryNavigation(menuList: MenuList) {
 @Composable
 private fun createFloatingActionButton(onClick: ()->Unit) {
     FloatingActionButton(
+        shape = RoundedCornerShape(10.dp),
         onClick = {
             onClick()
         },
@@ -211,7 +224,7 @@ private fun createFloatingActionButton(onClick: ()->Unit) {
                 contentDescription = "ShoppingCart",
                 tint = Color.White
             )
-            Text("cart")
+            Text("cart", color = Color.White)
         }
     }
 }
@@ -220,31 +233,34 @@ private fun createFloatingActionButton(onClick: ()->Unit) {
 @Composable
 fun showCartView(showCartContent: Boolean, cartViewModel: CartViewModel, onClick: () -> Unit) {
     val totalPrice by cartViewModel.totalCartPrice.collectAsStateWithLifecycle()
+    var showDialog by remember { mutableStateOf(false) }
     AnimatedVisibility(showCartContent) {
         Scaffold(topBar = {
             TopAppBar(title = {
-                Text(text = "Bill Number: ${cartViewModel.cartDetails.billNumber}", style = MaterialTheme.typography.bodyMedium)
-            }, colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.DarkGray), modifier = Modifier.background(Color.LightGray))
-        }, modifier = Modifier.fillMaxHeight().fillMaxWidth(0.25f).background(Color.LightGray)) { innerPadding ->
-            Box(modifier = Modifier.fillMaxHeight().fillMaxWidth().background(Color.LightGray).padding(innerPadding)) {
+                Text(text = "Order Number: ${cartViewModel.cartDetails.billNumber}", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
+            },)
+        }, modifier = Modifier.fillMaxHeight().fillMaxWidth(0.30f)) { innerPadding ->
+            Box(modifier = Modifier.fillMaxHeight().fillMaxWidth().padding(innerPadding)) {
                 val cartDetails = cartViewModel.cartDetails
                 val cartMenuSet = cartDetails.cartMenuSet
-                     Column (modifier = Modifier.fillMaxWidth()) {
-                         CartItemCard("Name:", "Qty:", "Pr")
-                         cartMenuSet.forEachIndexed { serNo, item ->
-                             CartItemCard(item.menuItemName, "${item.quantity}", "${item.quantity * item.price}")
+                     Column (modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.SpaceBetween) {
+                         CartItemCardTitle("Name:", "Qty:", "Pr:")
+                         cartMenuSet.forEach{ item ->
+                             CartItemCard(item.menuItemName, "${item.quantity}", "${item.quantity * item.price}", onDeleteClick = {
+                                 cartViewModel.deleteCartItemAndUpdteTotal(item, totalPrice - (item.quantity * item.price))
+                             })
                          }
-                         Text(text = "Total Price: $totalPrice", textAlign = TextAlign.End ,modifier = Modifier
+                         Text(text = "Total Price: $totalPrice kr", textAlign = TextAlign.End ,modifier = Modifier
                              .padding(25.dp)
                              .align(Alignment.End))
                          Row {
                              Button(onClick = {
-                             cartMenuSet.clear()
-                             cartDetails.totalPrice = 0.0
-                             cartViewModel.updateClearTotal()
-                             onClick()
+                                 showDialog = true
                                               }, modifier = Modifier.padding(5.dp)) {
-                                 Text(text = "Checkout")
+                                 Row(horizontalArrangement = Arrangement.SpaceBetween, modifier =  Modifier.align(Alignment.CenterVertically)) {
+                                     Icon(Icons.Outlined.Payment, modifier = Modifier.padding(end = 5.dp), contentDescription = "payment button", tint = Color.White )
+                                     Text(text = "Payment", color = Color.White)
+                                 }
                              }
                              Button(onClick = {
                                  cartMenuSet.clear()
@@ -252,10 +268,30 @@ fun showCartView(showCartContent: Boolean, cartViewModel: CartViewModel, onClick
                                  cartViewModel.updateClearTotal()
                                  onClick()
                              }, modifier = Modifier.padding(5.dp)) {
-                                 Text(text = "Clear cart")
+                                 Row(horizontalArrangement = Arrangement.SpaceBetween, modifier =  Modifier.align(Alignment.CenterVertically)){
+                                     Icon(
+                                         Icons.Outlined.Delete,
+                                         modifier = Modifier.padding(end = 5.dp),
+                                         contentDescription = "delete all button",
+                                         tint = Color.Red
+                                     )
+                                     Text (text = "Clear all", color = Color.White)
+                                 }
                              }
                          }
-
+                     }
+                when {
+                    showDialog -> {
+                        showPaymentAlertDialog(onClickConfirm = {
+                            showDialog = false
+                            cartMenuSet.clear()
+                            cartDetails.totalPrice = 0.0
+                            cartViewModel.updateClearTotal()
+                            onClick()
+                        }, onDismissClick = {
+                            showDialog = false
+                        }, totalPrice = totalPrice)
+                    }
                 }
             }
         }
@@ -263,13 +299,47 @@ fun showCartView(showCartContent: Boolean, cartViewModel: CartViewModel, onClick
 }
 
 @Composable
-fun CartItemCard(cartMenuName: String, quantity: String, priceValue: String,) {
-    Row(modifier =  Modifier.padding(5.dp)){
-        Text(text = cartMenuName, modifier = Modifier.weight(0.60f))
-        Text(text = quantity, modifier = Modifier.weight(0.15f))
-        Text(text = priceValue, modifier = Modifier.weight(0.25f))
+fun showPaymentAlertDialog(onClickConfirm: () -> Unit, onDismissClick: () -> Unit, totalPrice: Double) {
+    val title = "Confirm Payment"
+    val text =
+        "The total amount you need to pay $totalPrice kr"
+    val confirmButtonText = "Confirm Pay"
+    val dismissButtonText = "Continue Update"
 
-    }
+    val containerColor = AlertDialogDefaults.containerColor
+    val titleContentColor = AlertDialogDefaults.titleContentColor
+    val textContentColor = AlertDialogDefaults.textContentColor
+
+    val dismissOnBackPress = true
+    val dismissOnClickOutside = true
+
+     AlertDialog(
+            onDismissRequest = { onDismissClick() },
+            confirmButton = {
+                TextButton(
+                    onClick = { onClickConfirm() }
+                ) {
+                    Text(confirmButtonText, color = textContentColor)
+                }
+            },
+            dismissButton =
+                {
+                    TextButton(
+                        onClick = { onDismissClick() }
+                    ) {
+                        Text(dismissButtonText, color = textContentColor)
+                    }
+                },
+            title = { Text(title, color = titleContentColor, textAlign = TextAlign.Center) },
+            text = { Text(text, color = textContentColor, textAlign = TextAlign.Center) },
+            shape = MaterialTheme.shapes.large,
+            backgroundColor = containerColor,
+            contentColor = textContentColor,
+            properties = DialogProperties(
+                dismissOnBackPress = dismissOnBackPress,
+                dismissOnClickOutside = dismissOnClickOutside
+            )
+        )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -289,16 +359,20 @@ fun DetailedDrawer(
                 ) {
                     Spacer(Modifier.height(12.dp))
                     Text("Menu Category ", modifier = Modifier.padding(16.dp), style = MaterialTheme.typography.titleLarge)
-                    HorizontalDivider()
+                    HorizontalDivider(modifier = Modifier.padding(bottom = 10.dp))
+                    var selectedMenuItem by rememberSaveable {
+                        mutableStateOf(menuCategoryList.first().key)
+                    }
                     menuCategoryList.forEach { item ->
                         NavigationDrawerItem(
                             label = { Text(item.key) },
-                            selected = false,
+                            selected = selectedMenuItem == item.key,
                             badge = {
                                 Text(text = menuList[item.key]?.size.toString())
                             },
                             icon = { Icon(enumImageVector(MenuCategory.valueOf(item.key)), contentDescription = null) },
                             onClick = {
+                                selectedMenuItem = item.key
                                 viewModel.changeSelectedCategoryValue(MenuCategory.valueOf(item.key))
                             }
                         )

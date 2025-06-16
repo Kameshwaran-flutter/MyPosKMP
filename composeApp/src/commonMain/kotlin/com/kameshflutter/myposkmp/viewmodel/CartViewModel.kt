@@ -43,4 +43,9 @@ class CartViewModel : ViewModel() {
     var cartDetails = CartDetails(billNumber = getBillNumber(), totalPrice = 0.0, mutableSetOf<CartMenuDetails>())
 
     private fun getBillNumber() = Random.nextInt(from = 0, until = 1000000)
+    fun deleteCartItemAndUpdteTotal(item: CartMenuDetails, totalNewPrice: Double) {
+        _totalPrice.value = totalNewPrice
+        cartDetails.cartMenuSet.remove(item)
+        cartDetails.totalPrice = totalCartPrice.value
+    }
 }

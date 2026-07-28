@@ -26,3 +26,7 @@ converted the JSON file in to serializabe model class
 created view model class to get the list of menu category and its group menu items with price.
 created view model for card with model data class.
 used Navigation drawer with ElevatedCard for in design and Column and row. 
+
+App preview
+<img width="2424" height="1080" alt="MyposKMP" src="https://github.com/user-attachments/assets/a8120e6c-b02f-4144-ad30-0f4568a8b8d6" />
+

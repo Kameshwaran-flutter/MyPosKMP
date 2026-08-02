@@ -46,9 +46,13 @@ Notes
 This is a learning project focused on Kotlin Multiplatform structure and Compose Multiplatform UI sharing. It complements my primary production experience in Flutter/Dart (BLE-connected IoT apps, 1.4M+ downloads) — here I wanted to work through the KMP equivalent of the shared-logic patterns I use daily.
 
 Roadmap
+
  Cart quantity controls and order total
+ 
  Persistence layer (SQLDelight) for orders
+ 
  Unit tests for the cart and catalog ViewModels
+ 
  iOS target
 
 
